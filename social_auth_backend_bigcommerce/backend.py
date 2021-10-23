@@ -11,9 +11,9 @@ from social_core.utils import handle_http_errors
 
 API_VERSION = 3
 
-class BigCommerceOAuth2(BaseOAuth2):  # pylint: disable=abstract-method
+class BigCommerceAdminBaseAuth(BaseOAuth2):  # pylint: disable=abstract-method
     """
-    BigCommerce OAuth authentication backend.
+    BigCommerce OAuth authentication base backend for Admin accounts.
 
     In testing with BigCommerce OAuth this seems to only work with Staff Admin Users (not Customer accounts).
     Caution: This is still WIP and not fully developed.
@@ -21,7 +21,7 @@ class BigCommerceOAuth2(BaseOAuth2):  # pylint: disable=abstract-method
 
     # https://none/oauth2/authorize?client_id=&state=aoXfKXnWezd3413k4GdCil9azlP7Jcn4&redirect_uri=http%3A%2F%2Fcourses.trustworks-aas.localhost%3A18000%2Fauth%2Fcomplete%2Fbigcommerce-oauth2%2F%3Fredirect_state%3DaoXfKXnWezd3413k4GdCil9azlP7Jcn4&response_type=code
 
-    name = 'bigcommerce-oauth2'
+    name = ''
     AUTH_SERVICE = 'login.bigcommerce.com'
     API_SERVICE = 'api.bigcommerce.com'
     AUTHORIZATION_URL = 'https://{domain}/oauth2/authorize'
@@ -163,12 +163,28 @@ class BigCommerceOAuth2(BaseOAuth2):  # pylint: disable=abstract-method
         return self.strategy.authenticate(*args, **kwargs)
 
 
-class BigCommerceEmailAuth(EmailAuth):  # pylint: disable=abstract-method
+class BigCommerceAdminDefaultAuth(BigCommerceAdminBaseAuth):  # pylint: disable=abstract-method
     """
-    BigCommerce email authentication backend.
+    BigCommerce OAuth authentication backend for Admin accounts on the `default` site.
     """
 
-    name = 'bigcommerce-emailauth'
+    name = 'bigcommerce-admin-default'
+
+
+class BigCommerceAdminTrustworksAuth(BigCommerceAdminBaseAuth):  # pylint: disable=abstract-method
+    """
+    BigCommerce OAuth authentication backend for Admin accounts on the `Trustworks-aaS` site.
+    """
+
+    name = 'bigcommerce-admin-trustworks'
+
+
+class BigCommerceCustomerBaseAuth(EmailAuth):  # pylint: disable=abstract-method
+    """
+    BigCommerce email authentication base backend for Customers accounts.
+    """
+
+    name = ''
     FORM_URL = 'https://{storefront}.{domain}/login.php'
     ID_KEY = 'id'
     REQUIRES_EMAIL_VALIDATION = True
@@ -266,3 +282,19 @@ class BigCommerceEmailAuth(EmailAuth):  # pylint: disable=abstract-method
 
         return data
 
+
+class BigCommerceCustomerDefaultAuth(BigCommerceCustomerBaseAuth):  # pylint: disable=abstract-method
+    """
+    BigCommerce email authentication base backend for Customer accounts on the `default` site.
+    """
+
+    name = 'bigcommerce-customerauth-default'
+
+
+class BigCommerceCustomerTrustworksAuth(BigCommerceCustomerBaseAuth):  # pylint: disable=abstract-method
+    """
+    BigCommerce email authentication base backend for Customer accounts on the `Trustworks` site.
+    """
+
+    name = 'bigcommerce-customerauth-trustworks'
+    
