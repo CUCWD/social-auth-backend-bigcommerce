@@ -70,7 +70,7 @@ setup(
     name='social-auth-backend-bigcommerce',
     version=VERSION,
     description="""BigCommerce backend for Social Auth""",
-    long_description=README + '\n\n' + CHANGELOG,
+    long_description=README + '\n\n'.encode('utf-8') + CHANGELOG,
     author='Clemson University Center for Workforce Development',
     author_email='cucwd@clemson.edu',
     url='https://github.com/CUCWD/social-auth-backend-bigcommerce',

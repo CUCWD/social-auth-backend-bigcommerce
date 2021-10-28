@@ -278,7 +278,7 @@ class BigCommerceCustomerBaseAuth(EmailAuth):  # pylint: disable=abstract-method
         payload = {'bc_uid': uid,'platform_user': user}
         self.strategy.bigcommerce_save_store_customer_platform_user(payload, backend=self)
 
-        data = super().extra_data(user, uid, response, details, *args, **kwargs)
+        data = super(BigCommerceCustomerBaseAuth, self).extra_data(user, uid, response, details, *args, **kwargs)
 
         return data
 
