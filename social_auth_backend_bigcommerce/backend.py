@@ -235,6 +235,11 @@ class BigCommerceCustomerBaseAuth(EmailAuth):  # pylint: disable=abstract-method
         """Completes login process, must return user instance"""
         bc_customer_metadata = self.strategy.bigcommerce_retrieve_and_store_customer(self.data.get('token'), backend=self)
 
+        # No need to keep passing this token down the social_core pipeline 
+        # stages since it was decode and only used to pull in data assigned
+        # below from `bc_customer_metadata`.
+        self.data.pop('token')
+
         self.data['store_hash'] = bc_customer_metadata.get('store_hash')
         self.data['id'] = bc_customer_metadata.get('id')
         self.data['email'] = bc_customer_metadata.get('email')
@@ -288,7 +293,7 @@ class BigCommerceCustomerDefaultAuth(BigCommerceCustomerBaseAuth):  # pylint: di
     BigCommerce email authentication base backend for Customer accounts on the `default` site.
     """
 
-    name = 'bigcommerce-customerauth-default'
+    name = 'bc-customerauth-default'
 
 
 class BigCommerceCustomerTrustworksAuth(BigCommerceCustomerBaseAuth):  # pylint: disable=abstract-method
@@ -296,5 +301,5 @@ class BigCommerceCustomerTrustworksAuth(BigCommerceCustomerBaseAuth):  # pylint:
     BigCommerce email authentication base backend for Customer accounts on the `Trustworks` site.
     """
 
-    name = 'bigcommerce-customerauth-trustworks'
+    name = 'bc-customerauth-trustworks'
     
