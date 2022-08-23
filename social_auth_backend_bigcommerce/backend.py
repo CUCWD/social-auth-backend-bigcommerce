@@ -245,6 +245,8 @@ class BigCommerceCustomerBaseAuth(EmailAuth):  # pylint: disable=abstract-method
         self.data['email'] = bc_customer_metadata.get('email')
         self.data['first_name'] = bc_customer_metadata.get('first_name')
         self.data['last_name'] = bc_customer_metadata.get('last_name')
+        self.data['postal_code'] = bc_customer_metadata.get('postal_code')
+        self.data['country_code'] = bc_customer_metadata.get('country_code')
 
         if self.ID_KEY not in self.data:
             raise AuthMissingParameter(self, self.ID_KEY)
@@ -264,6 +266,9 @@ class BigCommerceCustomerBaseAuth(EmailAuth):  # pylint: disable=abstract-method
         )
         if email and not username:
             username = email.split('@', 1)[0]
+        postal_code = response.get('postal_code')
+        country_code = response.get('country_code')
+        
         return {
             'store_hash': store_hash,
             'id': id,
@@ -272,7 +277,16 @@ class BigCommerceCustomerBaseAuth(EmailAuth):  # pylint: disable=abstract-method
             'fullname': fullname,
             'first_name': first_name,
             'last_name': last_name,
-            'country': 'US'
+            'level_of_education': 'prefer-not-to-say',
+            'enrolled_in_school': 'prefer-not-to-say',
+            'enrolled_in_school_type': 'prefer-not-to-say',
+            'year_of_birth': None,
+            'gender': 'prefer-not-to-say',
+            'ethnicity': 'prefer-not-to-say',
+            'local_community_living': 'prefer-not-to-say',
+            'employment_status': 'prefer-not-to-say',
+            'zipcode': postal_code,
+            'country': country_code
         }
 
     def extra_data(self, user, uid, response, details=None, *args, **kwargs):
